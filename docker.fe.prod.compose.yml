@@ -1,0 +1,7 @@
+services:
+  study-web-fe:
+    image: ghcr.io/cus-study-web/frontend:latest
+    container_name: study-web-fe
+    ports:
+      - "80:80"
+    restart: unless-stopped
