@@ -1,13 +1,13 @@
 fe-prod:
-	podman system unshare rm -rf /run/user/1000/netns/* /run/user/1000/libpod/tmp/* || true
+	rm -rf /run/user/1000/netns/* /run/user/1000/libpod/tmp/* || true
 	podman system migrate || true
 	podman rm -f study-web-fe || true
-	podman compose -f docker.fe.prod.compose.yml pull
-	podman compose -f docker.fe.prod.compose.yml up -d
+	podman pull ghcr.io/cus-study-web/frontend:latest
+	podman run -d --name study-web-fe -p 8081:80 --restart unless-stopped ghcr.io/cus-study-web/frontend:latest
 
 fe-staging:
-	podman system unshare rm -rf /run/user/1000/netns/* /run/user/1000/libpod/tmp/* || true
+	rm -rf /run/user/1000/netns/* /run/user/1000/libpod/tmp/* || true
 	podman system migrate || true
 	podman rm -f study-web-fe-staging || true
-	podman compose -p study-web-fe-staging -f docker.fe.staging.compose.yml pull
-	podman compose -p study-web-fe-staging -f docker.fe.staging.compose.yml up -d
+	podman pull ghcr.io/cus-study-web/frontend:staging
+	podman run -d --name study-web-fe-staging -p 8080:80 --restart unless-stopped ghcr.io/cus-study-web/frontend:staging
