@@ -3,5 +3,6 @@ services:
     image: ghcr.io/cus-study-web/frontend:latest
     container_name: study-web-fe
     ports:
-      - "80:80"
+      - "8081:80"
     restart: unless-stopped
+    network_mode: slirp4netns
