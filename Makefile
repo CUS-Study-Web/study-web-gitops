@@ -15,17 +15,23 @@ fe-prod:
 be-staging: 
 	@echo ">> Pulling backend image"
 	podman pull ghcr.io/cus-study-web/backend:staging
-	@echo ">> Pulling auxiliary images Postgres, Redis..."
-	podman-compose -f docker.be.staging.compose.yml --env-file backend.env pull postgres redis
-
 	@echo ">> Starting infrastructure with backend image: staging"
 	podman-compose -f docker.be.staging.compose.yml --env-file backend.env up -d --force-recreate
 
 be-prod: 
 	@echo ">> Pulling backend image"
 	podman pull ghcr.io/cus-study-web/backend:latest
-	@echo ">> Pulling auxiliary images Postgres, Redis..."
-	podman-compose -f docker.be.prod.compose.yml --env-file backend.env pull postgres redis
-
 	@echo ">> Starting infrastructure with backend production"
 	podman-compose -f docker.be.prod.compose.yml --env-file backend.env up -d --force-recreate
+
+infra:
+	@echo ">> Checking staging infrastructure..."
+	@if [ "$$(podman inspect -f '{{.State.Running}}' studyweb-postgres2>/dev/null)" = "true" ] && \
+	    [ "$$(podman inspect -f '{{.State.Running}}' studyweb-redis 2>/dev/null)" = "true" ]; then \
+		echo ">> PostgreSQL and Redis are already running."; \
+	else \
+		echo ">> Infrastructure is missing or stopped. Starting..."; \
+		podman-compose -f docker.infra.compose.yml \
+			--env-file backend.env \
+			up -d postgres redis; \
+	fi
