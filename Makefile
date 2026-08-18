@@ -12,18 +12,18 @@ fe-prod:
 	@sleep 2
 	@podman ps | grep study-web-fe
 
-pull-be:
-	@echo ">> Pulling backend image: $(IMAGE_NAME)"
-	podman pull $(IMAGE_NAME)
-
-be-staging: pull-be
+be-staging: 
+	@echo ">> Pulling backend image"
+	podman pull ghcr.io/cus-study-web/backend:staging
 	@echo ">> Pulling auxiliary images Postgres, Redis..."
 	podman-compose -f docker-compose.backend.staging.yaml --env-file backend.env pull postgres redis
 
 	@echo ">> Starting infrastructure with backend image: staging"
 	podman-compose -f docker-compose.backend.staging.yaml --env-file backend.env up -d --force-recreate
 
-be-prod: pull-be
+be-prod: 
+	@echo ">> Pulling backend image"
+	podman pull ghcr.io/cus-study-web/backend:latest
 	@echo ">> Pulling auxiliary images Postgres, Redis..."
 	podman-compose -f docker-compose.backend.prod.yaml --env-file backend.env pull postgres redis
 
