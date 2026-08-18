@@ -13,12 +13,16 @@ fe-prod:
 	@podman ps | grep study-web-fe
 
 be-staging: 
+	systemctl --user daemon-reload
+	systemctl --user restart studyweb-backend-staging
 	@echo ">> Pulling backend image"
 	podman pull ghcr.io/cus-study-web/backend:staging
 	@echo ">> Starting infrastructure with backend image: staging"
 	podman-compose -f docker.be.staging.compose.yml --env-file backend.env up -d --force-recreate
 
 be-prod: 
+	systemctl --user daemon-reload
+	systemctl --user restart studyweb-backend
 	@echo ">> Pulling backend image"
 	podman pull ghcr.io/cus-study-web/backend:latest
 	@echo ">> Starting infrastructure with backend production"
