@@ -10,11 +10,6 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: ${REDIS_PORT}
-    depends_on:
-      postgres:
-        condition: service_started
-      redis:
-        condition: service_healthy
     restart: unless-stopped
 
   nginx:
