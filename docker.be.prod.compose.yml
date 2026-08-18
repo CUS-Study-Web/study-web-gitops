@@ -1,0 +1,61 @@
+services:
+  postgres:
+    image: docker.io/library/postgres:17-alpine
+    container_name: studyweb-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: docker.io/library/redis:8-alpine
+    container_name: studyweb-redis
+    ports:
+      - "${REDIS_PORT}:6379"
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  app:
+    image: ${BACKEND_IMAGE}
+    container_name: studyweb-backend
+    expose:
+      - "${BACKEND_PORT}"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: ${REDIS_PORT}
+    depends_on:
+      postgres:
+        condition: service_started
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  nginx:
+    image: docker.io/library/nginx:alpine
+    container_name: studyweb-nginx
+    ports:
+      - "${HTTP_PORT}:80"
+    environment:
+      SERVER_NAME: ${ALLOWED_SERVER}
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/templates/default.conf.template:ro
+    depends_on:
+      - app
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
