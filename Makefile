@@ -13,20 +13,20 @@ fe-prod:
 	@podman ps | grep study-web-fe
 
 be-staging: 
+	@echo ">> Remove old backend image"
+	podman rm -f studyweb-backend-staging
 	@echo ">> Pulling backend image"
 	podman pull ghcr.io/cus-study-web/backend:staging
 	@echo ">> Starting infrastructure with backend image: staging"
 	podman-compose -f docker.be.staging.compose.yml --env-file backend.env up -d --force-recreate
-	systemctl --user daemon-reload
-	systemctl --user restart studyweb-backend-staging
 
 be-prod: 
+	@echo ">> Remove old backend image"
+	podman rm -f studyweb-backend
 	@echo ">> Pulling backend image"
 	podman pull ghcr.io/cus-study-web/backend:latest
 	@echo ">> Starting infrastructure with backend production"
 	podman-compose -f docker.be.prod.compose.yml --env-file backend.env up -d --force-recreate
-	systemctl --user daemon-reload
-	systemctl --user restart studyweb-backend
 
 infra:
 	@echo ">> Checking staging infrastructure..."
@@ -38,7 +38,4 @@ infra:
 		podman-compose -f docker.infra.compose.yml \
 			--env-file backend.env \
 			up -d postgres redis; \
-		systemctl --user daemon-reload \
-		systemctl --user restart studyweb-postgres \
-		systemctl --user restart studyweb-redis
 	fi
