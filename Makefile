@@ -13,8 +13,6 @@ fe-prod:
 	@podman ps | grep study-web-fe
 
 pull-be:
-	@echo ">> Starting user service"
-	systemctl start user@1000.service
 	@echo ">> Pulling backend image: $(IMAGE_NAME)"
 	podman pull $(IMAGE_NAME)
 
