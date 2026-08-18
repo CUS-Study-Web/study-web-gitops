@@ -27,7 +27,7 @@ services:
     restart: unless-stopped
 
   app:
-    image: ${BACKEND_IMAGE}
+    image: ghcr.io/cus-study-web/backend:latest
     container_name: studyweb-backend
     expose:
       - "${BACKEND_PORT}"
