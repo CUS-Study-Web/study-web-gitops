@@ -13,10 +13,19 @@ fe-prod:
 	@podman ps | grep study-web-fe
 
 pull-be:
+	@echo ">> Starting user service"
+	systemctl start user@1000.service
 	@echo ">> Pulling backend image: $(IMAGE_NAME)"
 	podman pull $(IMAGE_NAME)
 
-be: pull-be
+be-staging: pull-be
+	@echo ">> Pulling auxiliary images Postgres, Redis..."
+	podman-compose -f docker-compose.backend.prod.yaml --env-file backend.env pull postgres redis
+
+	@echo ">> Starting infrastructure with backend image: $(IMAGE_NAME)..."
+	IMAGE_NAME=$(IMAGE_NAME) podman-compose -f docker-compose.backend.prod.yaml --env-file backend.env up -d --force-recreate
+
+be-prod: pull-be
 	@echo ">> Pulling auxiliary images Postgres, Redis..."
 	podman-compose -f docker-compose.backend.prod.yaml --env-file backend.env pull postgres redis
 

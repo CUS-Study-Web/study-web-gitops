@@ -1,0 +1,48 @@
+services:
+  postgres:
+    image: docker.io/library/postgres:17-alpine
+    container_name: studyweb-postgres-staging
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres_staging_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: docker.io/library/redis:8-alpine
+    container_name: studyweb-redis-staging
+    ports:
+      - "${REDIS_PORT}:6379"
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  app:
+    image: ghcr.io/cus-study-web/backend:staging
+    container_name: studyweb-backend-staging
+    ports:
+      - "${BACKEND_PORT}:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: ${REDIS_PORT}
+    depends_on:
+      postgres:
+        condition: service_started
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_staging_data:
