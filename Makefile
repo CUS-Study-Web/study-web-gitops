@@ -30,7 +30,7 @@ be-prod:
 
 infra:
 	@echo ">> Checking staging infrastructure..."
-	@if [ "$$(podman inspect -f '{{.State.Running}}' studyweb-postgres2>/dev/null)" = "true" ] && \
+	@if [ "$$(podman inspect -f '{{.State.Running}}' studyweb-postgres 2>/dev/null)" = "true" ] && \
 	    [ "$$(podman inspect -f '{{.State.Running}}' studyweb-redis 2>/dev/null)" = "true" ]; then \
 		echo ">> PostgreSQL and Redis are already running."; \
 	else \
