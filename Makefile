@@ -16,19 +16,25 @@ be-staging:
 	@echo ">> Pulling backend image"
 	podman pull ghcr.io/cus-study-web/backend:staging
 
+	@echo ">> Removing old container"
+	podman rm -f studyweb-backend-staging 2>/dev/null || true
+
 	@echo ">> Recreating backend"
 	podman-compose -f docker.be.staging.compose.yml \
 		--env-file backend.env \
-		up -d --force-recreate
+		up -d 
 
 be-prod:
 	@echo ">> Pulling backend image"
 	podman pull ghcr.io/cus-study-web/backend:latest
 
+	@echo ">> Removing old container"
+	podman rm -f studyweb-backend 2>/dev/null || true
+
 	@echo ">> Recreating backend"
 	podman-compose -f docker.be.prod.compose.yml \
 		--env-file backend.env \
-		up -d --force-recreate
+		up -d
 
 infra:
 	@echo ">> Checking staging infrastructure..."
