@@ -12,21 +12,23 @@ fe-prod:
 	@sleep 2
 	@podman ps | grep study-web-fe
 
-be-staging: 
-	@echo ">> Remove old backend image"
-	podman rm -f studyweb-backend-staging
+be-staging:
 	@echo ">> Pulling backend image"
 	podman pull ghcr.io/cus-study-web/backend:staging
-	@echo ">> Starting infrastructure with backend image: staging"
-	podman-compose -f docker.be.staging.compose.yml --env-file backend.env up -d --force-recreate
 
-be-prod: 
-	@echo ">> Remove old backend image"
-	podman rm -f studyweb-backend
+	@echo ">> Recreating backend"
+	podman-compose -f docker.be.staging.compose.yml \
+		--env-file backend.env \
+		up -d --force-recreate
+
+be-prod:
 	@echo ">> Pulling backend image"
 	podman pull ghcr.io/cus-study-web/backend:latest
-	@echo ">> Starting infrastructure with backend production"
-	podman-compose -f docker.be.prod.compose.yml --env-file backend.env up -d --force-recreate
+
+	@echo ">> Recreating backend"
+	podman-compose -f docker.be.prod.compose.yml \
+		--env-file backend.env \
+		up -d --force-recreate
 
 infra:
 	@echo ">> Checking staging infrastructure..."
