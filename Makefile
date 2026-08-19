@@ -20,7 +20,7 @@ be-staging:
 	podman rm -f studyweb-backend-staging 2>/dev/null || true
 
 	@echo ">> Recreating backend"
-	systemd-run --user --scope podman-compose -p studyweb-be-staging -f docker.be.staging.compose.yml \
+	systemd-run --user podman-compose -p studyweb-be-staging -f docker.be.staging.compose.yml \
 		--env-file backend.env \
 		up -d 
 
@@ -32,7 +32,7 @@ be-prod:
 	podman rm -f studyweb-backend 2>/dev/null || true
 
 	@echo ">> Recreating backend"
-	systemd-run --user --scope podman-compose -p studyweb-be-prod -f docker.be.prod.compose.yml \
+	systemd-run --user podman-compose -p studyweb-be-prod -f docker.be.prod.compose.yml \
 		--env-file backend.env \
 		up -d
 
@@ -42,8 +42,8 @@ infra:
 	    [ "$$(podman inspect -f '{{.State.Running}}' studyweb-redis 2>/dev/null)" = "true" ]; then \
 		echo ">> PostgreSQL and Redis are already running."; \
 	else \
-		echo ">> Infrastructure is missing or stopped. Starting..."; \
-		systemd-run --user --scope podman-compose -p studyweb-infra -f docker.infra.compose.yml \
+		echo ">> Infrastructure is missing or stopped. Starting..."	; \
+		systemd-run --user podman-compose -p studyweb-infra -f docker.infra.compose.yml \
 			--env-file backend.env \
 			up -d postgres redis; \
 	fi
