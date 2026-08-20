@@ -11,7 +11,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
-
+    networks:
+      - studyweb-network
+      
   redis:
     image: docker.io/library/redis:8-alpine
     container_name: studyweb-redis
@@ -25,6 +27,12 @@ services:
       retries: 5
       start_period: 10s
     restart: unless-stopped
+    networks:
+      - studyweb-network
+
+networks:
+  studyweb-network:
+    external: true
 
 volumes:
   postgres_data:
