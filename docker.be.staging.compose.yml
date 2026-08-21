@@ -7,10 +7,10 @@ services:
     ports:
       - "${BACKEND_PORT_STAGING}:${SERVER_PORT}"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://studyweb-postgres:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://${POSTGRES_SERVER_STAGING}:5432/${POSTGRES_DB}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
-      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_HOST: ${REDIS_HOST_STAGING}
       SPRING_DATA_REDIS_PORT: ${REDIS_PORT}
     restart: unless-stopped
     networks: 
