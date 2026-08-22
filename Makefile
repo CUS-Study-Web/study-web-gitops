@@ -18,7 +18,11 @@ fe-prod:
 	@sleep 2
 	@podman ps | grep study-web-fe
 
-be-staging:
+dns-refresh:
+	@echo ">> Refreshing Aardvark DNS daemon..."
+	@pkill -u $$(id -u) -f aardvark-dns || true
+
+be-staging: dns-refresh
 	@echo ">> Pulling backend image"
 	podman pull ghcr.io/cus-study-web/backend:staging
 	@echo ">> Triggering Systemd Service for Staging..."
@@ -27,7 +31,7 @@ be-staging:
 	@sleep 2
 	@podman ps | grep studyweb-backend-staging || true
 
-be-prod:
+be-prod: dns-refresh
 	@echo ">> Pulling backend image"
 	podman pull ghcr.io/cus-study-web/backend:latest
 	@echo ">> Triggering Systemd Service for Production..."
@@ -36,7 +40,7 @@ be-prod:
 	@sleep 2
 	@podman ps | grep studyweb-backend || true
 
-infra:
+infra: dns-refresh
 	@echo ">> Ensuring infrastructure is running..."
 	systemctl --user daemon-reload
 	systemctl --user start study-web-infra
