@@ -1,4 +1,7 @@
 fe-staging:
+	@echo "==> Copying systemd service file..."
+	mkdir -p /home/study-web/.config/systemd/user
+	cp study-web-fe-staging.service /home/study-web/.config/systemd/user/
 	@echo "==> Triggering Systemd User Service for Staging..."
 	systemctl --user daemon-reload
 	systemctl --user restart study-web-fe-staging
@@ -6,6 +9,9 @@ fe-staging:
 	@podman ps | grep study-web-fe-staging
 
 fe-prod:
+	@echo "==> Copying systemd service file..."
+	mkdir -p /home/study-web/.config/systemd/user
+	cp study-web-fe.service /home/study-web/.config/systemd/user/
 	@echo "==> Triggering Systemd User Service for Production..."
 	systemctl --user daemon-reload
 	systemctl --user restart study-web-fe

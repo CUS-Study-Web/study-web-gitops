@@ -1,7 +1,0 @@
-services:
-  study-web-fe-staging:
-    image: ghcr.io/cus-study-web/frontend:staging
-    container_name: study-web-fe-staging
-    ports:
-      - "8080:80"
-    restart: unless-stopped
