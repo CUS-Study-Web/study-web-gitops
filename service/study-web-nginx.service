@@ -6,11 +6,11 @@ Wants=network-online.target
 [Service]
 Type=forking
 
-ExecStart=/usr/sbin/nginx -c /home/study-web/.config/systemd/user/git-ops/nginx/default.conf
-ExecReload=/usr/sbin/nginx -s reload -c /home/study-web/.config/systemd/user/git-ops/nginx/default.conf
-ExecStop=/usr/sbin/nginx -s quit -c /home/study-web/.config/systemd/user/git-ops/nginx/default.conf
+ExecStart=/usr/sbin/nginx -c /home/cus-server/.config/systemd/user/git-ops/nginx/default.conf
+ExecReload=/usr/sbin/nginx -s reload -c /home/cus-server/.config/systemd/user/git-ops/nginx/default.conf
+ExecStop=/usr/sbin/nginx -s quit -c /home/cus-server/.config/systemd/user/git-ops/nginx/default.conf
 
-PIDFile=/home/study-web/.config/systemd/user/git-ops/nginx/run/nginx.pid
+PIDFile=/home/cus-server/.config/systemd/user/git-ops/nginx/run/nginx.pid
 
 Restart=on-failure
 RestartSec=5
