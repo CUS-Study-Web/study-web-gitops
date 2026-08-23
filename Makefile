@@ -20,7 +20,7 @@ fe-prod:
 
 dns-refresh:
 	@echo ">> Refreshing Aardvark DNS daemon..."
-	@pkill -u $$(id -u) -f aardvark-dns || true
+	@pkill -u "$$(id -u)" aardvark-dns || true
 
 be-staging: dns-refresh
 	@echo ">> Pulling backend image"
