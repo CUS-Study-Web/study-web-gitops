@@ -46,3 +46,7 @@ infra: dns-refresh
 	systemctl --user start study-web-infra
 	@sleep 2
 	@podman ps | grep studyweb-postgres || true
+
+nginx:
+	systemctl --user daemon-reload
+	systemctl --user start study-web-nginx

@@ -14,19 +14,6 @@ services:
       SPRING_DATA_REDIS_PORT: ${REDIS_PORT}
     restart: unless-stopped
 
-  nginx:
-    image: docker.io/library/nginx:alpine
-    container_name: studyweb-nginx
-    ports:
-      - "${HTTP_PORT}:80"
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/templates/default.conf.template:ro
-    depends_on:
-      - app
-    restart: unless-stopped
-    networks:
-      - studyweb-network
-
 networks:
   studyweb-network:
     external: true

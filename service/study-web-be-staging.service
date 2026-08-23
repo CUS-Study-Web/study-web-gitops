@@ -1,0 +1,20 @@
+  GNU nano 7.2                                                                                             study-web-be-staging.service                                                                                                      
+[Unit]
+Description=Study Web Backend Staging Podman Compose Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Restart=always
+EnvironmentFile=%h/.config/systemd/user/git-ops/backend.env
+
+WorkingDirectory=%h/.config/systemd/user/git-ops
+
+ExecStartPre=-/usr/bin/podman rm -f studyweb-backend-staging
+
+ExecStart=/usr/bin/podman-compose -p studyweb-be-staging -f docker.be.staging.compose.yml --env-file backend.env up
+
+ExecStop=/usr/bin/podman-compose -p studyweb-be-staging -f docker.be.staging.compose.yml --env-file backend.env down
+
+[Install]
+WantedBy=default.target

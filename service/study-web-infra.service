@@ -1,0 +1,13 @@
+[Unit]
+Description=Study Web Infrastructure Service (Postgres & Redis)
+After=network-online.target
+
+[Service]
+Restart=always
+
+WorkingDirectory=/home/cus-server/.config/systemd/user/git-ops
+ExecStart=/usr/bin/podman-compose -p studyweb-infra -f docker.infra.compose.yml --env-file backend.env up postgres redis
+ExecStop=/usr/bin/podman-compose -p studyweb-infra -f docker.infra.compose.yml --env-file backend.env down
+
+[Install]
+WantedBy=default.target
