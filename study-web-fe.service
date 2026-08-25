@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Environment="FE_PROD_PORT=8081"
-Environment="BACKEND_API_URL=http://116.118.6.22/"
+Environment="BACKEND_API_URL=http://116.118.6.22"
 EnvironmentFile=-%h/.config/systemd/user/study-web-fe.env
 Restart=always
 ExecStartPre=-/usr/bin/podman rm -f study-web-fe
