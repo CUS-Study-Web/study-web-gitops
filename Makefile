@@ -47,6 +47,11 @@ infra: dns-refresh
 	@sleep 2
 	@podman ps | grep studyweb-postgres || true
 
+observability: dns-refresh	 
+	systemctl --user daemon-reload
+	systemctl --user start study-web-observability
+
 nginx:
 	systemctl --user daemon-reload
 	systemctl --user start study-web-nginx
+

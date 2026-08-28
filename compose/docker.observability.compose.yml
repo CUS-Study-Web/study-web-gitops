@@ -1,0 +1,76 @@
+services:
+  prometheus:
+    image: docker.io/prom/prometheus:v2.53.1
+    container_name: prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    networks:
+      - studyweb-observability-network
+    restart: unless-stopped
+
+  node-exporter:
+    image: docker.io/prom/node-exporter:v1.8.2
+    container_name: node-exporter
+    pid: host
+    volumes:
+      - /:/host:ro,rslave
+    command:
+      - '--path.rootfs=/host'
+    networks:
+      - studyweb-observability-network
+    restart: unless-stopped
+
+  loki:
+    image: docker.io/grafana/loki:3.1.0
+    container_name: loki
+    volumes:
+      - ./loki/loki.yml:/etc/loki/config.yaml:ro
+      - loki_data:/loki
+    command: -config.file=/etc/loki/config.yaml
+    networks:
+      - studyweb-observability-network
+    restart: unless-stopped
+
+  alloy:
+    image: docker.io/grafana/alloy:v1.2.0
+    container_name: alloy
+    volumes:
+      - ./alloy/config.alloy:/etc/alloy/config.alloy:ro
+      - /home/cus-server/.config/systemd/user/git-ops/nginx/logs:/var/log/nginx:ro
+      - ./access.log:/var/log/nginx/access.log:ro
+      - alloy_data:/var/lib/alloy
+    command:
+      - run
+      - /etc/alloy/config.alloy
+      - --storage.path=/var/lib/alloy
+    networks:
+      - studyweb-observability-network
+    restart: unless-stopped
+
+  grafana:
+    image: docker.io/grafana/grafana:11.1.0
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - studyweb-observability-network
+    restart: unless-stopped
+
+networks:
+  studyweb-observability-network:
+    name:   
+
+volumes:
+  prometheus_data:
+  loki_data:
+  alloy_data:
+  grafana_data:

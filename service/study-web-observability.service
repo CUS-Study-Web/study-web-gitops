@@ -1,0 +1,19 @@
+[Unit]
+Description=Study Web Observability Stack
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+
+WorkingDirectory=%h/.config/systemd/user/git-ops
+
+ExecStart=/usr/bin/podman compose -f docker.observability.compose.yml up -d
+ExecStop=/usr/bin/podman compose -f docker.observability.compose.yml down
+
+TimeoutStartSec=0
+TimeoutStopSec=120
+
+[Install]
+WantedBy=default.target
