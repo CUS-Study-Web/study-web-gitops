@@ -8,9 +8,10 @@ Type=oneshot
 RemainAfterExit=yes
 
 WorkingDirectory=%h/.config/systemd/user/git-ops
+EnvironmentFile=%h/.config/systemd/user/git-ops/observability.env
 
-ExecStart=/usr/bin/podman compose -f docker.observability.compose.yml up -d
-ExecStop=/usr/bin/podman compose -f docker.observability.compose.yml down
+ExecStart=/usr/bin/podman compose --env-file observability.env -f docker.observability.compose.yml up -d
+ExecStop=/usr/bin/podman compose --env-file observability.env -f docker.observability.compose.yml down
 
 TimeoutStartSec=0
 TimeoutStopSec=120
