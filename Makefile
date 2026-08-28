@@ -43,15 +43,15 @@ be-prod: dns-refresh
 infra: dns-refresh
 	@echo ">> Ensuring infrastructure is running..."
 	systemctl --user daemon-reload
-	systemctl --user start study-web-infra
+	systemctl --user restart study-web-infra
 	@sleep 2
 	@podman ps | grep studyweb-postgres || true
 
 observability: dns-refresh	 
 	systemctl --user daemon-reload
-	systemctl --user start study-web-observability
+	systemctl --user restart study-web-observability
 
 nginx:
 	systemctl --user daemon-reload
-	systemctl --user start study-web-nginx
+	systemctl --user restart study-web-nginx
 
