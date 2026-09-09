@@ -35,6 +35,24 @@ services:
       - studyweb-observability-network
     restart: unless-stopped
 
+  business-loki:
+    image: grafana/loki:3.7.0
+    container_name: studyweb-loki
+    env_file:
+      - observability.env
+    ports:
+      - "3100:3100"
+    command:
+      - "-config.file=/etc/loki/local-config.yaml"
+      - "-config.expand-env=true"
+    volumes:
+      - ./loki/business-loki.yml:/etc/loki/local-config.yaml:ro
+      - business_loki_data:/loki
+    networks:
+      - studyweb-observability-network
+      - studyweb-network
+    restart: unless-stopped
+
   alloy:
     image: docker.io/grafana/alloy:v1.2.0
     container_name: alloy
@@ -72,10 +90,12 @@ services:
 
 networks:
   studyweb-observability-network:
-    name:   
+  studyweb-network:
+    external: true
 
 volumes:
   prometheus_data:
   loki_data:
+  business_loki_data:
   alloy_data:
   grafana_data:
