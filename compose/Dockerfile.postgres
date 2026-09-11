@@ -1,0 +1,10 @@
+FROM docker.io/library/postgres:17-alpine
+
+RUN apk add --no-cache \
+    pgbackrest \
+    tzdata \
+    ca-certificates \
+    curl
+
+RUN mkdir -p /etc/pgbackrest && \
+    chown postgres:postgres /etc/pgbackrest
