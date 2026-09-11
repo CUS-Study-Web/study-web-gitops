@@ -3,7 +3,7 @@ services:
     image: ghcr.io/cus-study-web/backend:staging
     container_name: studyweb-backend-staging
     env_file:
-      - backend.env
+      - staging.env
     ports:
       - "${BACKEND_PORT_STAGING}:${SERVER_PORT}"
     environment:
