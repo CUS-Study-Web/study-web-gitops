@@ -12,9 +12,9 @@ WorkingDirectory=%h/.config/systemd/user/git-ops
 
 ExecStartPre=-/usr/bin/podman rm -f studyweb-backend-staging
 
-ExecStart=/usr/bin/podman-compose -p studyweb-be-staging -f docker.be.staging.compose.yml --env-file backend.env up
+ExecStart=/usr/bin/podman-compose -p studyweb-be-staging -f docker.be.staging.compose.yml --env-file staging.env up
 
-ExecStop=/usr/bin/podman-compose -p studyweb-be-staging -f docker.be.staging.compose.yml --env-file backend.env down
+ExecStop=/usr/bin/podman-compose -p studyweb-be-staging -f docker.be.staging.compose.yml --env-file staging.env down
 
 [Install]
 WantedBy=default.target
