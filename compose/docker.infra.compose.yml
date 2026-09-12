@@ -4,6 +4,16 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile.postgres
+    command:
+      - "postgres"
+      - "-c"
+      - "wal_level=replica"
+      - "-c"
+      - "archive_mode=on"
+      - "-c"
+      - "archive_command=pgbackrest --stanza=staging archive-push %p"
+      - "-c"
+      - "max_wal_senders=3"
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
